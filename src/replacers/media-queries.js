@@ -1,7 +1,8 @@
 /**
  * Media queries
  * Supported values:
- * - (type) ios, android
+ * - (type) ios, android, windows, macos, web
+ * - subtype
  * - height, min-height, max-height
  * - width, min-width, max-width
  * - orientation
@@ -11,7 +12,7 @@
 import {Dimensions, Platform, I18nManager} from 'react-native';
 import mediaQuery from 'css-mediaquery';
 import utils from '../utils';
-      
+
 const PREFIX = '@media';
 
 export default {
@@ -60,6 +61,24 @@ function process(obj) {
   return res;
 }
 
+function getSubType() {
+  if (Platform.isTVOS) return 'tvOS';
+  if (Platform.isTV) return 'androidTV';
+  if (Platform.isPad) return 'pad';
+
+  switch (Platform.OS) {
+    case 'windows':
+    case 'macos':
+      return 'desktop';
+    case 'web':
+      return 'browser';
+    case 'android':
+    case 'ios':
+    default:
+      return 'phone';
+  }
+}
+
 /**
  * Returns object to match media query
  * @returns {Object}
@@ -73,6 +92,7 @@ function getMatchObject() {
     orientation: win.width > win.height ? 'landscape' : 'portrait',
     'aspect-ratio': win.width / win.height,
     type: Platform.OS,
+    subtype: getSubType(),
     direction: isRTL ? 'rtl' : 'ltr'
   };
 }
