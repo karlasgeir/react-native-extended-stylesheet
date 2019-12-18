@@ -1,6 +1,7 @@
 const rn = {
   Platform: {
-    OS: 'ios'
+    OS: 'ios',
+    isTVOS: true
   },
   Dimensions: {
     get: () => {
@@ -97,6 +98,27 @@ describe('media-queries', function () {
       '@media android': {
         a: 2,
       }
+    };
+    expect(mq.process(obj)).toEqual({a: 1});
+  });
+
+  it('should process subtype', function () {
+    const obj = {
+      '@media (subtype: tvOS)': {
+        a: 1,
+      },
+      '@media (subtype: androidTV)': {
+        a: 2,
+      },
+      '@media (subtype: pad)': {
+        a: 3
+      },
+      '@media (subtype: desktop)': {
+        a: 4
+      },
+      '@media (subtype: browser)': {
+        a: 5
+      },
     };
     expect(mq.process(obj)).toEqual({a: 1});
   });
